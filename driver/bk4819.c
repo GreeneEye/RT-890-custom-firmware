@@ -201,6 +201,7 @@ void BK4819_Init(void)
 	BK4819_WriteRegister(0x4B, 0x7102);
 	BK4819_WriteRegister(0x77, 0x88EF);
 	BK4819_WriteRegister(0x26, 0x13A0);
+	BK4819_WriteRegister(0x13, 0x0394); //Test gain settings 
 	BK4819_SetAFResponseCoefficients(false, true,  gCalibration.RX_3000Hz_Coefficient);
 	BK4819_SetAFResponseCoefficients(false, false, gCalibration.RX_300Hz_Coefficient);
 	BK4819_SetAFResponseCoefficients(true,  true,  gCalibration.TX_3000Hz_Coefficient);
@@ -465,11 +466,13 @@ void BK4819_SetFilterBandwidth(bool bIsNarrow)
 #ifndef ENABLE_REGISTER_EDIT
 		if (bIsNarrow) {
 			//BK4819_WriteRegister(0x43, 0x4048); //stock
-			BK4819_WriteRegister(0x43, 0x7B08); //kamil/fagci
+			//BK4819_WriteRegister(0x43, 0x7B08); //kamil/fagci
+			BK4819_WriteRegister(0x43, 0x1408);
 			//BK4819_WriteRegister(0x43, 0x4408); //egzumer
 		} else {
 			//BK4819_WriteRegister(0x43, 0x3028); //stock
-			BK4819_WriteRegister(0x43, 0x3428); //kamil/fagci
+			//BK4819_WriteRegister(0x43, 0x7B08); //kamil/fagci
+			BK4819_WriteRegister(0x43, 0x1408);
 			//BK4819_WriteRegister(0x43, 0x45A8); //egzumer
 		}
 #else
@@ -566,7 +569,8 @@ void BK4819_RestoreGainSettings()
 	BK4819_WriteRegister(0x10, 0x0038);  
 	BK4819_WriteRegister(0x11, 0x025a);  
 	BK4819_WriteRegister(0x12, 0x037b); 
-	BK4819_WriteRegister(0x13, 0x03de);
+	//BK4819_WriteRegister(0x13, 0x03de);
+	BK4819_WriteRegister(0x13, 0x0394);
 	BK4819_WriteRegister(0x14, 0x0000); 
 }
 
