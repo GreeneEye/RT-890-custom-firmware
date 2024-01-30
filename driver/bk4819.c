@@ -274,6 +274,25 @@ void BK4819_SetFrequency(uint32_t Frequency)
 	BK4819_WriteRegister(0x39, (Frequency >> 16) & 0xFFFFU);
 }
 
+
+// Add this function declaration in the appropriate section of your code
+void TailSquelchElimination(void);
+
+// Add this function definition in the source file
+void TailSquelchElimination(void) {
+    // Perform any tail squelch elimination logic here
+
+    // Example: Set squelch level to a higher value
+    BK4819_WriteRegister(0x4F, 0x0B00);  // Adjust the value as needed
+
+    // Delay for a specific duration (adjust as needed)
+    DELAY_WaitMS(500);
+
+    // Restore squelch to normal level
+    BK4819_SetSquelchNoise(gMainVfo->bIsNarrow);  // Use the appropriate function
+}
+
+
 void BK4819_SetSquelchGlitch(bool bIsNarrow)
 {
 
