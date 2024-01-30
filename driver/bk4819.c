@@ -14,6 +14,47 @@
  *     limitations under the License.
  */
 
+
+#include "app/css.h"
+#include "app/radio.h"
+#include "bsp/gpio.h"
+#include "driver/bk4819.h"
+#include "driver/delay.h"
+#include "driver/pins.h"
+#include "driver/speaker.h"
+#include "helper/helper.h"
+#include "misc.h"
+#include "radio/settings.h"
+
+
+
+
+// ... (previous code)
+
+// Add this function declaration in the appropriate section of your code
+void TailSquelchElimination(void);
+
+// Add this function definition in the source file
+void TailSquelchElimination(void) {
+    // Perform any tail squelch elimination logic here
+
+    // Example: Set squelch level to a higher value
+    BK4819_WriteRegister(0x4F, 0x0B00);  // Adjust the value as needed
+
+    // Delay for a specific duration (adjust as needed)
+    DELAY_WaitMS(500);
+
+    // Restore squelch to normal level
+    BK4819_SetSquelchNoise(gMainVfo->bIsNarrow);  // Use the appropriate function
+}
+
+// ... (rest of your existing code)
+
+
+
+
+
+
 #include "app/css.h"
 #include "app/radio.h"
 #include "bsp/gpio.h"
