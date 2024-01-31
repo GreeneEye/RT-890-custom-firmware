@@ -14,47 +14,6 @@
  *     limitations under the License.
  */
 
-
-#include "app/css.h"
-#include "app/radio.h"
-#include "bsp/gpio.h"
-#include "driver/bk4819.h"
-#include "driver/delay.h"
-#include "driver/pins.h"
-#include "driver/speaker.h"
-#include "helper/helper.h"
-#include "misc.h"
-#include "radio/settings.h"
-
-
-
-
-// ... (previous code)
-
-// Add this function declaration in the appropriate section of your code
-void TailSquelchElimination(void);
-
-// Add this function definition in the source file
-void TailSquelchElimination(void) {
-    // Perform any tail squelch elimination logic here
-
-    // Example: Set squelch level to a higher value
-    BK4819_WriteRegister(0x4F, 0x0B00);  // Adjust the value as needed
-
-    // Delay for a specific duration (adjust as needed)
-    DELAY_WaitMS(500);
-
-    // Restore squelch to normal level
-    BK4819_SetSquelchNoise(gMainVfo->bIsNarrow);  // Use the appropriate function
-}
-
-// ... (rest of your existing code)
-
-
-
-
-
-
 #include "app/css.h"
 #include "app/radio.h"
 #include "bsp/gpio.h"
@@ -154,26 +113,62 @@ static void DisableAGC(uint32_t Unknown)
 }
 #endif
 
+void BK4819_EnableTailSquelchElimination(void)
+{
+    // Use the maximum squelch value for Tail Squelch Elimination - 255 is 0, do not use 0
+    uint16_t squelchValue = (0xFF);
+
+    // Set the squelch glitch open level
+    BK4819_WriteRegister(0x4E, squelchValue);
+
+    // Adjust the squelch value for proper operation
+    squelchValue = (squelchValue * 10) / 9;
+
+    // Set the squelch glitch close level
+    BK4819_WriteRegister(0x4D, squelchValue);
+
+    // Enable Tail Squelch Elimination
+    BK4819_WriteRegister(0x30, 0x0200);
+
+    // Delay for 0-500ms (lower values can make it squirrely, but I have been testing between 0-2ms... Im not very patient with loud noises)
+    DELAY_WaitMS(0);
+
+    // Disable Tail Squelch Elimination (will write in a menu option later)
+    BK4819_WriteRegister(0x30, 0xBFF1);
+}
+
 void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
 {
 	switch(gModulationType) {
 		case 0:
 			BK4819_SetAF(BK4819_AF_OPEN);
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 1:
 			BK4819_SetAF(BK4819_AF_AM);
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 2:
 			BK4819_SetAF(BK4819_AF_LSB);
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 3:
-			BK4819_SetAF(BK4819_AF_USB);
+			BK4819_SetAF(BK4819_AF_USB);			
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 			break;
 	}
 	if (bIsNarrow) {
-		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainNarrow);
+		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainNarrow);			
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 	} else {
 		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainWide);
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 	}
 }
 
@@ -314,25 +309,6 @@ void BK4819_SetFrequency(uint32_t Frequency)
 	BK4819_WriteRegister(0x38, (Frequency >>  0) & 0xFFFFU);
 	BK4819_WriteRegister(0x39, (Frequency >> 16) & 0xFFFFU);
 }
-
-
-// Add this function declaration in the appropriate section of your code
-void TailSquelchElimination(void);
-
-// Add this function definition in the source file
-void TailSquelchElimination(void) {
-    // Perform any tail squelch elimination logic here
-
-    // Example: Set squelch level to a higher value
-    BK4819_WriteRegister(0x4F, 0x0B00);  // Adjust the value as needed
-
-    // Delay for a specific duration (adjust as needed)
-    DELAY_WaitMS(500);
-
-    // Restore squelch to normal level
-    BK4819_SetSquelchNoise(gMainVfo->bIsNarrow);  // Use the appropriate function
-}
-
 
 void BK4819_SetSquelchGlitch(bool bIsNarrow)
 {
@@ -682,6 +658,8 @@ void BK4819_StartAudio(void)
 	if (gMainVfo->gModulationType == 0) {
 		BK4819_WriteRegister(0x4D, 0xA080);
 		BK4819_WriteRegister(0x4E, 0x6F7C);
+		    // Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 	}
 
 	if (gMainVfo->gModulationType > 0) {
@@ -692,7 +670,11 @@ void BK4819_StartAudio(void)
 		uint16_t reg_73 = BK4819_ReadRegister(0x73);
 		BK4819_WriteRegister(0x73, reg_73 | 0x10U);
 		// BK4819_WriteRegister(0x43, 0b0100000001011000); // Filter 6.25KHz
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 		if (gMainVfo->gModulationType > 1) { // if SSB
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 			BK4819_WriteRegister(0x43, 0b0010000001011000); // Filter 6.25KHz
 			BK4819_WriteRegister(0x37, 0b0001011000001111);
     		BK4819_WriteRegister(0x3D, 0b0010101101000101);
@@ -705,16 +687,24 @@ void BK4819_StartAudio(void)
 		// BK4819_WriteRegister(0x43, 0x3028); // restore filter just in case -
 											// this gets overwritten by sane defaults anyway.
 		// Unset bit 4 of register 73 (Auto Frequency Control Disable)
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 		uint16_t reg_73 = BK4819_ReadRegister(0x73);
 		BK4819_WriteRegister(0x73, reg_73 & ~0x10U);
 		if (gMainVfo->Scramble == 0) {
 			BK4819_SetAFResponseCoefficients(false, true, gCalibration.RX_3000Hz_Coefficient);
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 		} else {
 			BK4819_SetAFResponseCoefficients(false, true, 4);
+			// Enable Tail Squelch Elimination
+    		BK4819_EnableTailSquelchElimination();
 		}
 	}
 	if (!gReceptionMode) {
 		BK4819_EnableFFSK1200(true);
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 	}
 	SPEAKER_TurnOn(SPEAKER_OWNER_RX);
 }
@@ -845,6 +835,8 @@ void BK4819_EnableTX(bool bUseMic)
 	if (bUseMic) {
 		BK4819_WriteRegister(0x30, 0xC1FE);
 	} else {
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 		BK4819_WriteRegister(0x30, 0xC3FA);
 	}
 }
