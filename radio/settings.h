@@ -67,6 +67,7 @@ typedef struct __attribute__((packed)) {
 	uint8_t DisplayTimer;
 	uint8_t LockTimer;
 	uint8_t TimeoutTimer;
+	uint8_t STETime;
 	// 0x06
 	uint8_t VoxDelay:4;
 	uint8_t VoxLevel:4;

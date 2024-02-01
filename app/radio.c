@@ -53,6 +53,7 @@ ChannelInfo_t *gMainVfo;
 ChannelInfo_t gVfoState[3];
 FrequencyInfo_t gVfoInfo[2];
 uint16_t gCurrentRssi[2];
+uint8_t gSTEState[1];
 
 bool gNoaaMode;
 uint16_t gCode;

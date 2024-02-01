@@ -95,6 +95,7 @@ enum {
 	MENU_DARK_MODE,
 	MENU_INITIALIZE,
 	MENU_VERSION,
+	MENU_STE_Time,
 };
 
 extern uint16_t gSettingGolay;

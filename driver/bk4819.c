@@ -114,27 +114,16 @@ static void DisableAGC(uint32_t Unknown)
 #endif
 
 void BK4819_EnableTailSquelchElimination(void)
-{
-    // Use the maximum squelch value for Tail Squelch Elimination - 255 is 0, do not use 0
-    uint16_t squelchValue = (0xFF);
-
-    // Set the squelch glitch open level
-    BK4819_WriteRegister(0x4E, squelchValue);
-
-    // Adjust the squelch value for proper operation
-    squelchValue = (squelchValue * 10) / 9;
-
-    // Set the squelch glitch close level
-    BK4819_WriteRegister(0x4D, squelchValue);
-
-    // Enable Tail Squelch Elimination
-    BK4819_WriteRegister(0x30, 0x0200);
-
-    // Delay for 0-500ms (lower values can make it squirrely, but I have been testing between 0-2ms... Im not very patient with loud noises)
-    DELAY_WaitMS(0);
-
-    // Disable Tail Squelch Elimination (will write in a menu option later)
-    BK4819_WriteRegister(0x30, 0xBFF1);
+{ 	if (gSignalFound == false) {
+    	BK4819_WriteRegister(0x4E, 0xFF);
+		BK4819_WriteRegister(0x4D, 0xFF);
+			if (gSettings.STETime == 0){
+				BK4819_WriteRegister(0x4E, gSettings.Squelch);
+				BK4819_WriteRegister(0x4D, gSettings.Squelch);}
+			else{
+				BK4819_WriteRegister(0x4E, gSettings.Squelch);
+				BK4819_WriteRegister(0x4D, gSettings.Squelch);
+				DELAY_WaitMS(gSettings.STETime);}}
 }
 
 void OpenAudio(bool bIsNarrow, uint8_t gModulationType)

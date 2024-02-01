@@ -36,6 +36,7 @@
 #include "ui/main.h"
 #include "ui/menu.h"
 #include "ui/version.h"
+#include "driver/bk4819.h"
 
 static const char Menu[][14] = {
 	"Startup Logo  ",
@@ -112,6 +113,7 @@ static const char Menu[][14] = {
 	"Dark Mode     ",
 	"Initialize    ",
 	"Version       ",
+	"STE Time      ",
 };
 
 static const ChannelInfo_t EmptyChannel = {
@@ -426,6 +428,13 @@ void MENU_AcceptSetting(void)
 		gSettings.TimeoutTimer = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
 		SETTINGS_SaveGlobals();
 		break;
+	
+	case MENU_STE_Time:
+		gSettings.STETime = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
+		SETTINGS_SaveGlobals();
+		break;
+
+		UI_DrawSettingArrow(gSettingIndex);
 
 	case MENU_VOX_LEVEL:
 		gSettings.VoxLevel = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
@@ -436,6 +445,7 @@ void MENU_AcceptSetting(void)
 		gSettings.VoxDelay = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
 		SETTINGS_SaveGlobals();
 		break;
+
 #ifdef ENABLE_NOAA
 	case MENU_NOAA_MONITOR:
 		gSettings.NoaaAlarm = gSettingIndex;
@@ -696,8 +706,6 @@ void MENU_AcceptSetting(void)
 		}
 		break;
 	}
-
-	UI_DrawSettingArrow(gSettingIndex);
 }
 
 void MENU_DrawSetting(void)
@@ -798,6 +806,13 @@ void MENU_DrawSetting(void)
 		UI_DrawTimer(gSettingCurrentValue);
 		break;
 
+	case MENU_STE_Time:
+		gSettingCurrentValue = gSettings.STETime;
+		gSettingMaxValues = 43;
+		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
+		UI_DrawTimer(gSettingCurrentValue);
+		break;
+
 	case MENU_VOX_LEVEL:
 		gSettingCurrentValue = gSettings.VoxLevel;
 		gSettingMaxValues = 10;
@@ -811,6 +826,7 @@ void MENU_DrawSetting(void)
 		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
 		UI_DrawLevel(gSettingCurrentValue);
 		break;
+
 #ifdef ENABLE_NOAA
 	case MENU_NOAA_MONITOR:
 		gSettingIndex = gSettings.NoaaAlarm;
@@ -1002,6 +1018,7 @@ void MENU_DrawSetting(void)
 	case MENU_MENU_LONG:
 	case MENU_EXIT_LONG:
 		gSettingMaxValues = ACTIONS_COUNT;
+
 		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
 		if (gMenuIndex >= MENU_0_LONG) {
 			gSettingCurrentValue = gExtendedSettings.KeyShortcut[gMenuIndex - MENU_0_LONG] % ACTIONS_COUNT;
@@ -1062,7 +1079,6 @@ void MENU_DrawSetting(void)
 		UI_DrawVersion();
 		break;
 	}
-
 	UI_DrawSettingArrow(gSettingIndex);
 }
 
@@ -1254,7 +1270,7 @@ void MENU_ScrollSetting(uint8_t Key)
 	case MENU_VOX_DELAY:
 		UI_DrawLevel(gSettingCurrentValue);
 		break;
-
+	
 	case MENU_LED_TIMER:
 	case MENU_LOCK_TIMER:
 	case MENU_TOT:
@@ -1342,6 +1358,10 @@ void MENU_ScrollSetting(uint8_t Key)
 	case MENU_DTMF_SELECT:
 		UI_DrawDtmfSelect(gSettingCurrentValue);
 		break;
+	
+	case MENU_STE_Time:
+		UI_DrawTimer(gSettingCurrentValue);
+		break;
 	}
 }
 
@@ -1395,6 +1415,7 @@ void MENU_PlayAudio(uint8_t MenuID)
 	case MENU_K2_SHORT:      ID = 0x36; break;
 	case MENU_INITIALIZE:    ID = 0x23; break;
 	case MENU_VERSION:       ID = 0x3B; break;
+	case MENU_STE_Time:     ID = 0xFF; break;
 	}
 
 	if (ID) {

@@ -64,6 +64,7 @@ void BK4819_StartAudio(void);
 void BK4819_SetAfGain(uint16_t Gain);
 void BK4819_InitDTMF(void);
 bool BK4819_CheckSquelchLink(void);
+void BK4819_EnableTailSquelchElimination(void);
 void BK4819_EnableTone1(bool bEnable);
 void BK4819_GenTail(bool bIsNarrow);
 void BK4819_SetupPowerAmplifier(uint8_t Bias);
