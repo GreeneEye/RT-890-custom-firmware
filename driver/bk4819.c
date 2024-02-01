@@ -115,15 +115,13 @@ static void DisableAGC(uint32_t Unknown)
 
 void BK4819_EnableTailSquelchElimination(void)
 { 	if (gSignalFound == false) {
-    	BK4819_WriteRegister(0x4E, 0xFF);
-		BK4819_WriteRegister(0x4D, 0xFF);
-			if (gSettings.STETime == 0){
-				BK4819_WriteRegister(0x4E, gSettings.Squelch);
-				BK4819_WriteRegister(0x4D, gSettings.Squelch);}
-			else{
+			if (gSettings.STETime >= 1){
+    		BK4819_WriteRegister(0x4E, 0xFF);
+			BK4819_WriteRegister(0x4D, 0xFF);
+				if (gSettings.STETime >= 1){
 				BK4819_WriteRegister(0x4E, gSettings.Squelch);
 				BK4819_WriteRegister(0x4D, gSettings.Squelch);
-				DELAY_WaitMS(gSettings.STETime);}}
+				DELAY_WaitMS(gSettings.STETime);}}}
 }
 
 void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
