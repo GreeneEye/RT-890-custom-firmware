@@ -121,8 +121,7 @@ void BK4819_EnableTailSquelchElimination(void)
 				if (gSettings.STETime >= 1){
 				DELAY_STE(gSettings.STETime);
 				BK4819_WriteRegister(0x4E, gSettings.Squelch);
-				BK4819_WriteRegister(0x4D, gSettings.Squelch);
-				DELAY_STE(gSettings.STETime);}}}
+				BK4819_WriteRegister(0x4D, gSettings.Squelch);}}}
 }
 
 void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
