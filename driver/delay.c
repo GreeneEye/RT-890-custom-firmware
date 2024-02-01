@@ -17,6 +17,7 @@
 #include <at32f421.h>
 #include "driver/crm.h"
 #include "driver/delay.h"
+#include "radio/settings.h"
 
 static uint32_t gCyclesPerMicroSec;
 static uint32_t gCyclesPerMilliSec;
@@ -81,3 +82,10 @@ void DELAY_WaitMS(uint16_t Delay)
 	WaitMS(Delay % 500);
 }
 
+void DELAY_STE(uint8_t DelaySTE)
+{
+	systick_clock_source_config(SYSTICK_CLOCK_SOURCE_AHBCLK_NODIV);
+
+	gCyclesPerMilliSec = (gSystemCoreClock / 1000000) * 1000;
+	DelaySTE = (gSettings.STETime * gCyclesPerMilliSec);
+}
