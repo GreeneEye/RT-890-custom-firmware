@@ -137,11 +137,11 @@ void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
 			BK4819_SetAF(BK4819_AF_LSB);
 			break;
 		case 3:
-			BK4819_SetAF(BK4819_AF_USB);	
+			BK4819_SetAF(BK4819_AF_USB);		
 			break;
 	}
 	if (bIsNarrow) {
-		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainNarrow);			
+		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainNarrow);	
 	} else {
 		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainWide);
 	}
@@ -634,8 +634,6 @@ void BK4819_StartAudio(void)
 	if (gMainVfo->gModulationType == 0) {
 		BK4819_WriteRegister(0x4D, 0xA080);
 		BK4819_WriteRegister(0x4E, 0x6F7C);
-		    // Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 	}
 
 	if (gMainVfo->gModulationType > 0) {
@@ -646,11 +644,7 @@ void BK4819_StartAudio(void)
 		uint16_t reg_73 = BK4819_ReadRegister(0x73);
 		BK4819_WriteRegister(0x73, reg_73 | 0x10U);
 		// BK4819_WriteRegister(0x43, 0b0100000001011000); // Filter 6.25KHz
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 		if (gMainVfo->gModulationType > 1) { // if SSB
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 			BK4819_WriteRegister(0x43, 0b0010000001011000); // Filter 6.25KHz
 			BK4819_WriteRegister(0x37, 0b0001011000001111);
     		BK4819_WriteRegister(0x3D, 0b0010101101000101);
@@ -663,24 +657,16 @@ void BK4819_StartAudio(void)
 		// BK4819_WriteRegister(0x43, 0x3028); // restore filter just in case -
 											// this gets overwritten by sane defaults anyway.
 		// Unset bit 4 of register 73 (Auto Frequency Control Disable)
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 		uint16_t reg_73 = BK4819_ReadRegister(0x73);
 		BK4819_WriteRegister(0x73, reg_73 & ~0x10U);
 		if (gMainVfo->Scramble == 0) {
 			BK4819_SetAFResponseCoefficients(false, true, gCalibration.RX_3000Hz_Coefficient);
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 		} else {
 			BK4819_SetAFResponseCoefficients(false, true, 4);
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 		}
 	}
 	if (!gReceptionMode) {
 		BK4819_EnableFFSK1200(true);
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 	}
 	SPEAKER_TurnOn(SPEAKER_OWNER_RX);
 }

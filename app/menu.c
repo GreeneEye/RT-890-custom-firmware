@@ -1434,7 +1434,6 @@ void MENU_PlayAudio(uint8_t MenuID)
 	case MENU_K2_SHORT:      ID = 0x36; break;
 	case MENU_INITIALIZE:    ID = 0x23; break;
 	case MENU_VERSION:       ID = 0x3B; break;
-	case MENU_STE_Time:     ID = 0xFF; break;
 	}
 
 	if (ID) {
