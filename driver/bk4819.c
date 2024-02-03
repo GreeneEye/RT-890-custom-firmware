@@ -115,13 +115,13 @@ static void DisableAGC(uint32_t Unknown)
 
 void BK4819_EnableTailSquelchElimination(void)
 { 	if (gSignalFound == false) {
-		if (gSettings.STETime >= 1){
+				if (gSettings.STETime >= 1){
     		BK4819_WriteRegister(0x4E, 0xFF);
-		BK4819_WriteRegister(0x4D, 0xFF);
+						BK4819_WriteRegister(0x4D, 0xFF);
 			if (gSettings.STETime >= 1){
 			DELAY_STE(gSettings.STETime);
-			BK4819_WriteRegister(0x4E, gSettings.Squelch);
-			BK4819_WriteRegister(0x4D, gSettings.Squelch);}}}
+			BK4819_WriteRegister(0x4E, BK4819_SetSquelchGlitch);
+			BK4819_WriteRegister(0x4D, BK4819_SetSquelchGlitch);}}}
 }
 
 void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
@@ -129,33 +129,21 @@ void OpenAudio(bool bIsNarrow, uint8_t gModulationType)
 	switch(gModulationType) {
 		case 0:
 			BK4819_SetAF(BK4819_AF_OPEN);
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 1:
 			BK4819_SetAF(BK4819_AF_AM);
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 2:
 			BK4819_SetAF(BK4819_AF_LSB);
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
 			break;
 		case 3:
-			BK4819_SetAF(BK4819_AF_USB);			
-			// Enable Tail Squelch Elimination
-    		BK4819_EnableTailSquelchElimination();
+			BK4819_SetAF(BK4819_AF_USB);	
 			break;
 	}
 	if (bIsNarrow) {
 		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainNarrow);			
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 	} else {
 		BK4819_SetAfGain(gFrequencyBandInfo.RX_DAC_GainWide);
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 	}
 }
 
@@ -278,6 +266,7 @@ void BK4819_SetAFResponseCoefficients(bool bTx, bool bLowPass, uint8_t Index)
 
 void BK4819_EnableRX(void)
 {
+	BK4819_EnableTailSquelchElimination();
 	BK4819_WriteRegister(0x37, 0x1F0F);
 	DELAY_WaitMS(10);
 	BK4819_WriteRegister(0x30, 0x0200);
