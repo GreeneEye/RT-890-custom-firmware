@@ -822,8 +822,6 @@ void BK4819_EnableTX(bool bUseMic)
 	if (bUseMic) {
 		BK4819_WriteRegister(0x30, 0xC1FE);
 	} else {
-		// Enable Tail Squelch Elimination
-    	BK4819_EnableTailSquelchElimination();
 		BK4819_WriteRegister(0x30, 0xC3FA);
 	}
 }
