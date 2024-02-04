@@ -502,15 +502,6 @@ void UI_DrawSettingMicGain(uint8_t Index)
 	UI_DrawString(24, 24, gShortString, 2);
 }
 
-void UI_DrawSettingMicGain(uint8_t Index)
-{
-	gColorForeground = COLOR_FOREGROUND;
-	Int2Ascii(Index, 2);
-	UI_DrawString(24, 48, gShortString, 2);
-	Int2Ascii((Index + 1) % 32, 2);
-	UI_DrawString(24, 24, gShortString, 2);
-}
-
 void UI_DrawSTETime(uint8_t Index)
 {
 	char String[4];
