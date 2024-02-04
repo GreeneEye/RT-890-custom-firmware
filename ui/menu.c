@@ -501,3 +501,74 @@ void UI_DrawSettingMicGain(uint8_t Index)
 	Int2Ascii((Index + 1) % 32, 2);
 	UI_DrawString(24, 24, gShortString, 2);
 }
+
+void UI_DrawSettingMicGain(uint8_t Index)
+{
+	gColorForeground = COLOR_FOREGROUND;
+	Int2Ascii(Index, 2);
+	UI_DrawString(24, 48, gShortString, 2);
+	Int2Ascii((Index + 1) % 32, 2);
+	UI_DrawString(24, 24, gShortString, 2);
+}
+
+void UI_DrawSTETime(uint8_t Index)
+{
+	char String[4];
+	uint16_t STETime;
+
+	String[0] = ' ';
+	String[1] = ' ';
+	String[2] = ' ';
+	String[3] = ' ';
+
+	switch (Index) {
+	case 0:
+		UI_DrawSettingOptionEx(" Off", 4, 0);
+		UI_DrawSettingOptionEx("   5", 4, 1);
+		break;
+
+	case 1:
+		UI_DrawSettingOptionEx("   5", 4, 0);
+		UI_DrawSettingOptionEx("  10", 4, 1);
+		break;
+
+	case 2:
+		UI_DrawSettingOptionEx("  10", 4, 0);
+		UI_DrawSettingOptionEx("  15", 4, 1);
+		break;
+
+	case 42:
+		UI_DrawSettingOptionEx(" 600", 4, 0);
+		UI_DrawSettingOptionEx(" Off", 4, 1);
+		break;
+
+	default:
+		STETime = (Index - 2) * 15;
+		if (STETime < 100) {
+			Int2Ascii(STETime, 2);
+			String[2] = gShortString[0];
+			String[3] = gShortString[1];
+			UI_DrawSettingOptionEx(String, 4, 0);
+		} else {
+			Int2Ascii(STETime, 3);
+			String[1] = gShortString[0];
+			String[2] = gShortString[1];
+			String[3] = gShortString[2];
+			UI_DrawSettingOptionEx(String, 4, 0);
+		}
+		STETime = (Index - 1) * 15;
+		if (STETime < 100) {
+			Int2Ascii(STETime, 2);
+			String[2] = gShortString[0];
+			String[3] = gShortString[1];
+			UI_DrawSettingOptionEx(String, 4, 1);
+		} else {
+			Int2Ascii(STETime, 3);
+			String[1] = gShortString[0];
+			String[2] = gShortString[1];
+			String[3] = gShortString[2];
+			UI_DrawSettingOptionEx(String, 4, 1);
+		}
+		break;
+	}
+}

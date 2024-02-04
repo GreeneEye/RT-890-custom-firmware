@@ -82,10 +82,10 @@ void DELAY_WaitMS(uint16_t Delay)
 	WaitMS(Delay % 500);
 }
 
-void DELAY_STE(uint8_t DelaySTE)
+void DELAY_STE(uint8_t STETime)
 {
 	systick_clock_source_config(SYSTICK_CLOCK_SOURCE_AHBCLK_NODIV);
 
 	gCyclesPerMilliSec = (gSystemCoreClock / 1000000) * 1000;
-	DelaySTE = (gSettings.STETime * gCyclesPerMilliSec);
+	STETime = (gExtendedSettings.STETime * gCyclesPerMilliSec);
 }

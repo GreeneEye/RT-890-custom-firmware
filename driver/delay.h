@@ -22,7 +22,7 @@
 void DELAY_Init(void);
 void DELAY_WaitUS(uint32_t Delay);
 void DELAY_WaitMS(uint16_t Delay);
-void DELAY_STE(uint8_t DelaySTE);
+void DELAY_STE(uint8_t STETime);
 
 #endif
 

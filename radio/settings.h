@@ -67,7 +67,6 @@ typedef struct __attribute__((packed)) {
 	uint8_t DisplayTimer;
 	uint8_t LockTimer;
 	uint8_t TimeoutTimer;
-	uint8_t STETime;
 	// 0x06
 	uint8_t VoxDelay:4;
 	uint8_t VoxLevel:4;
@@ -169,6 +168,7 @@ typedef struct __attribute__((packed)) {
 	// 0x01 - 0x0E
 	uint8_t KeyShortcut[14];
 	// 0x0F
+	uint8_t STETime;
 	uint8_t ScanAll: 1;
 	uint8_t MicGainLevel: 6;
 	uint8_t Undefined: 1;	// free for use
