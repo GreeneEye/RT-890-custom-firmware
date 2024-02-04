@@ -38,6 +38,7 @@ void UI_DrawActivateBy(void);
 void UI_DrawCursor(uint8_t X, bool bVisible);
 void UI_DrawTxPriority(void);
 void UI_DrawFrequencyStep(uint8_t Index);
+void UI_DrawSTETime(uint8_t Index);
 void UI_DrawTimer(uint8_t Index);
 void UI_DrawLevel(uint8_t Index);
 void UI_DrawScanDirection(void);

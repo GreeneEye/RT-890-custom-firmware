@@ -276,6 +276,8 @@ void RADIO_StartRX(void)
 #endif
 	BK4819_StartAudio();
 	if (!gFrequencyDetectMode) {
+		// Enable Tail Squelch Elimination
+    	BK4819_EnableTailSquelchElimination();
 		DTMF_ClearString();
 		DTMF_FSK_InitReceive(0);
 		VOX_Timer = 0;

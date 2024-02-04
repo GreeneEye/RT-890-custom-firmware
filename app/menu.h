@@ -113,6 +113,7 @@ void MENU_Next(uint8_t Key);
 void MENU_SettingKeyHandler(uint8_t Key);
 void MENU_ScrollSetting(uint8_t Key);
 void MENU_PlayAudio(uint8_t ID);
+void UI_DrawSTETime(uint8_t Interval);
 
 #endif
 

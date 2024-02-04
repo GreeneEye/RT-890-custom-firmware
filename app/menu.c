@@ -430,13 +430,6 @@ void MENU_AcceptSetting(void)
 		gSettings.TimeoutTimer = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
 		SETTINGS_SaveGlobals();
 		break;
-	
-	case MENU_STE_Time:
-		gSettings.STETime = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
-		SETTINGS_SaveGlobals();
-		break;
-
-		UI_DrawSettingArrow(gSettingIndex);
 
 	case MENU_VOX_LEVEL:
 		gSettings.VoxLevel = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
@@ -700,6 +693,11 @@ void MENU_AcceptSetting(void)
 		DrawStatusBar();
 		MENU_Redraw(true);
 		break;
+	
+	case MENU_STE_Time:
+		gExtendedSettings.STETime = (gSettingCurrentValue + gSettingIndex) % gSettingMaxValues;
+		SETTINGS_SaveGlobals();
+		break;
 
 	case MENU_INITIALIZE:
 		if (gSettingIndex == 1) {
@@ -809,13 +807,6 @@ void MENU_DrawSetting(void)
 
 	case MENU_TOT:
 		gSettingCurrentValue = gSettings.TimeoutTimer;
-		gSettingMaxValues = 43;
-		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
-		UI_DrawTimer(gSettingCurrentValue);
-		break;
-
-	case MENU_STE_Time:
-		gSettingCurrentValue = gSettings.STETime;
 		gSettingMaxValues = 43;
 		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
 		UI_DrawTimer(gSettingCurrentValue);
@@ -1093,6 +1084,14 @@ void MENU_DrawSetting(void)
 		gSettingMaxValues = 0;
 		UI_DrawVersion();
 		break;
+
+	case MENU_STE_Time:
+		gSettingCurrentValue = gExtendedSettings.STETime;
+		gSettingMaxValues = 43;
+		DISPLAY_Fill(0, 159, 1, 55, COLOR_BACKGROUND);
+		UI_DrawSTETime(gSettingCurrentValue);
+		break;
+
 	}
 	UI_DrawSettingArrow(gSettingIndex);
 }
@@ -1379,7 +1378,7 @@ void MENU_ScrollSetting(uint8_t Key)
 		break;
 	
 	case MENU_STE_Time:
-		UI_DrawTimer(gSettingCurrentValue);
+		UI_DrawSTETime(gSettingCurrentValue);
 		break;
 	}
 }
@@ -1434,7 +1433,6 @@ void MENU_PlayAudio(uint8_t MenuID)
 	case MENU_K2_SHORT:      ID = 0x36; break;
 	case MENU_INITIALIZE:    ID = 0x23; break;
 	case MENU_VERSION:       ID = 0x3B; break;
-	case MENU_STE_Time:     ID = 0xFF; break;
 	}
 
 	if (ID) {

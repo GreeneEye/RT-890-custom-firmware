@@ -28,6 +28,7 @@
 #include "task/scanner.h"
 #include "ui/gfx.h"
 #include "ui/helper.h"
+#include "driver/bk4819.h"
 
 Calibration_t gCalibration;
 char gDeviceName[16];
