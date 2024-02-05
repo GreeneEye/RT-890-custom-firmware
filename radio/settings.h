@@ -168,11 +168,11 @@ typedef struct __attribute__((packed)) {
 	// 0x01 - 0x0E
 	uint8_t KeyShortcut[14];
 	// 0x0F
-	uint8_t STETime;
 	uint8_t ScanAll: 1;
 	uint8_t MicGainLevel: 6;
 	uint8_t Undefined: 1;	// free for use
 	// 0x10...
+		uint8_t STETime;
 } gExtendedSettings_t;
 
 extern Calibration_t gCalibration;
